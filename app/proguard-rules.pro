@@ -1,21 +1,51 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# General ProGuard Rules
+-dontwarn okio.**
+-dontwarn javax.annotation.**
+-dontwarn kotlin.reflect.jvm.internal.**
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Retrofit-specific Rules
+-keepattributes Signature
+-keepattributes Exceptions
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# Retrofit annotations
+-keep class retrofit2.** { *; }
+-keepattributes RuntimeVisibleAnnotations
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# OkHttp
+-keep class okhttp3.** { *; }
+-dontwarn okhttp3.**
+
+# Gson rules
+-keep class com.google.gson.** { *; }
+-keepattributes *Annotation*
+-dontwarn com.google.gson.**
+
+# Prevent obfuscation of fields used for Gson serialization/deserialization
+-keepclassmembers class com.vipuljha.kitsuanime.features.anime.domain.models.** {
+    <fields>;
+    <methods>;
+}
+
+-keepclassmembers class com.vipuljha.kitsuanime.features.anime.data.dto.** {
+    <fields>;
+    <methods>;
+}
+
+# Keep all fields annotated with @SerializedName
+-keepclassmembers class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
+
+# Ensure enums are preserved
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+# Keep Retrofit API interfaces
+-keep interface com.vipuljha.kitsuanime.** { *; }
+
+# Prevent obfuscation of methods annotated with Retrofit annotations
+-keepclassmembers class * {
+    @retrofit2.http.* <methods>;
+}
