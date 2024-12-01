@@ -1,4 +1,4 @@
-package com.vipuljha.kitsuanime.ui.theme
+package com.vipuljha.kitsuanime.core.theme
 
 import androidx.compose.ui.graphics.Color
 

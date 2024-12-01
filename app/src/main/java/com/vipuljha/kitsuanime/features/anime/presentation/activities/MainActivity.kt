@@ -1,4 +1,4 @@
-package com.vipuljha.kitsuanime
+package com.vipuljha.kitsuanime.features.anime.presentation.activities
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,7 +10,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.vipuljha.kitsuanime.ui.theme.KitsuAnimeTheme
+import com.vipuljha.kitsuanime.core.theme.KitsuAnimeTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
