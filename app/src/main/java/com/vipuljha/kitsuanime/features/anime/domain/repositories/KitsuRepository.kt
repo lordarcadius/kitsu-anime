@@ -7,5 +7,5 @@ import kotlinx.coroutines.flow.Flow
 interface KitsuRepository {
 
     fun getTrendingAnimeList(): Flow<NetworkResponse<List<AnimeData>>>
-    fun getAnimeById(id: Int): Flow<NetworkResponse<AnimeData?>>
+    fun getAnimeById(id: String): Flow<NetworkResponse<AnimeData>>
 }

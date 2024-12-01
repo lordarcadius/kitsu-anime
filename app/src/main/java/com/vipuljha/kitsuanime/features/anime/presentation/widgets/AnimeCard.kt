@@ -1,5 +1,10 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package com.vipuljha.kitsuanime.features.anime.presentation.widgets
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,12 +31,12 @@ import coil.compose.AsyncImage
 import com.vipuljha.kitsuanime.features.anime.domain.models.AnimeData
 
 @Composable
-fun AnimeCard(
+fun SharedTransitionScope.AnimeCard(
     anime: AnimeData,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
-    Card(onClick = onClick, modifier = modifier.height(150.dp)) {
+    Card(onClick = onClick, modifier = Modifier.height(150.dp)) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(14.dp),
@@ -42,7 +47,11 @@ fun AnimeCard(
                 contentDescription = "${anime.attributes.canonicalTitle}'s image",
                 modifier = Modifier
                     .size(150.dp)
-                    .clip(RoundedCornerShape(10.dp)),
+                    .clip(RoundedCornerShape(10.dp))
+                    .sharedElement(
+                        rememberSharedContentState(key = anime.id),
+                        animatedVisibilityScope = animatedVisibilityScope
+                    ),
                 contentScale = ContentScale.Crop
             )
             Column {

@@ -1,5 +1,10 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package com.vipuljha.kitsuanime.features.anime.presentation.widgets
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,8 +28,10 @@ import com.vipuljha.kitsuanime.features.anime.domain.models.AnimeData
 import com.vipuljha.kitsuanime.features.anime.presentation.viewmodels.TrendingAnimeListViewModel
 
 @Composable
-fun TrendingAnimeListScreen(
-    viewModel: TrendingAnimeListViewModel = hiltViewModel()
+fun SharedTransitionScope.TrendingAnimeListScreen(
+    onClick: (String, String) -> Unit,
+    viewModel: TrendingAnimeListViewModel = hiltViewModel(),
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
 
     val animeList by viewModel.animeList.collectAsStateWithLifecycle()
@@ -32,7 +39,12 @@ fun TrendingAnimeListScreen(
         Column(modifier = Modifier.padding(innerPadding)) {
             when (animeList) {
                 is NetworkResponse.Loading -> LoadingIndicator()
-                is NetworkResponse.Success -> AnimeList((animeList as NetworkResponse.Success<List<AnimeData>>).data)
+                is NetworkResponse.Success -> AnimeList(
+                    (animeList as NetworkResponse.Success<List<AnimeData>>).data,
+                    onClick,
+                    animatedVisibilityScope
+                )
+
                 is NetworkResponse.Error -> LoadingError((animeList as NetworkResponse.Error).message)
             }
         }
@@ -40,7 +52,11 @@ fun TrendingAnimeListScreen(
 }
 
 @Composable
-private fun AnimeList(data: List<AnimeData>) {
+private fun SharedTransitionScope.AnimeList(
+    data: List<AnimeData>,
+    onClick: (String, String) -> Unit,
+    animatedVisibilityScope: AnimatedVisibilityScope
+) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(20.dp)
@@ -54,7 +70,12 @@ private fun AnimeList(data: List<AnimeData>) {
         }
 
         items(data) { anime ->
-            AnimeCard(anime = anime, onClick = {})
+            AnimeCard(
+                anime = anime, onClick = {
+                    onClick(anime.attributes.posterImage.original, anime.id)
+                },
+                animatedVisibilityScope = animatedVisibilityScope
+            )
         }
     }
 }

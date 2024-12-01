@@ -33,10 +33,10 @@ class KitsuRepositoryImpl(
         }
     }
 
-    override fun getAnimeById(id: Int): Flow<NetworkResponse<AnimeData?>> = flow {
+    override fun getAnimeById(id: String): Flow<NetworkResponse<AnimeData>> = flow {
         emit(NetworkResponse.Loading)
         try {
-            val response = api.getAnimeDetails(id = id)
+            val response = api.getAnimeDetails(id = id.toInt())
             if (response.isSuccessful) {
                 response.body()?.let {
                     emit(NetworkResponse.Success(it.toModel()))
