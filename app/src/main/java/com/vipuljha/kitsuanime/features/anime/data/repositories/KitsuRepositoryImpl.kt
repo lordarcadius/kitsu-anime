@@ -4,8 +4,10 @@ import com.vipuljha.kitsuanime.core.utils.NetworkResponse
 import com.vipuljha.kitsuanime.features.anime.data.datasources.network.KitsuApi
 import com.vipuljha.kitsuanime.features.anime.domain.models.AnimeData
 import com.vipuljha.kitsuanime.features.anime.domain.repositories.KitsuRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -31,7 +33,7 @@ class KitsuRepositoryImpl(
         } catch (e: Exception) {
             emit(NetworkResponse.Error("Unexpected Error: ${e.message}"))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     override fun getAnimeById(id: String): Flow<NetworkResponse<AnimeData>> = flow {
         emit(NetworkResponse.Loading)
@@ -51,6 +53,6 @@ class KitsuRepositoryImpl(
         } catch (e: Exception) {
             emit(NetworkResponse.Error("Unexpected Error: ${e.message}"))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
 }
